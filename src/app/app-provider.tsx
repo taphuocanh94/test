@@ -4,16 +4,15 @@ import { ActionDispatch, createContext, Suspense, useContext, useEffect, useRedu
 import Loading from "./loading";
 import test from "@/actions/test";
 
-
 export type AppContextBaseStateType = {
+    runnintTestAction: boolean;
     posts: TPost[];
-    currentPost: string;
 }
 
 
 const defaultAppContextState: AppContextBaseStateType = {
+    runnintTestAction: false,
     posts: [],
-    currentPost: ''
 }
 
 
@@ -29,7 +28,7 @@ export const AppContext = createContext<AppContextType>({
 
 type AppSetStatesAction =
     | { type: 'SET_POSTS'; payload: AppContextBaseStateType['posts'] }
-    | { type: 'SET_CURRENT_POST'; payload: string };
+    | { type: 'SET_TESTING', payload: boolean };
 
 
 export default function AppProvider({
@@ -45,10 +44,10 @@ export default function AppProvider({
                 ...prevState,
                 posts: action.payload,
             };
-        } else if (action.type == 'SET_CURRENT_POST') {
+        } else if (action.type == 'SET_TESTING') {
             return {
                 ...prevState,
-                currentPost: action.payload,
+                runnintTestAction: action.payload,
             };
         }
         return state
@@ -59,14 +58,14 @@ export default function AppProvider({
         console.log('pathname changed', pathname)
         const fetchLoggedInState = async () => {
             console.log('before test')
+            setAppStates({ type: 'SET_TESTING', payload: true })
             const testResult = await test();
             console.log('after test', testResult)
+            setAppStates({ type: 'SET_TESTING', payload: false })
         };
 
         fetchLoggedInState();
     }, [pathname]);
-
-
     return <Suspense fallback={<Loading />}>
         <AppContext.Provider value={{ appStates, setAppStates }}>
             <div className="flex flex-row h-full">

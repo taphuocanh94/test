@@ -15,7 +15,8 @@ export function PostsProvider({
 }) {
 
     const { appStates, setAppStates } = useAppContext()
-    useEffect(() => {
+    
+    useEffect(( ) => {
         setAppStates({
             type: 'SET_POSTS', payload: initPosts
         })

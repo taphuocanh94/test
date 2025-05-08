@@ -8,8 +8,9 @@ export default function PostLayout({
     children: React.ReactNode
 }) {
     const initPosts: TPost[] = []
+    console.log('Posts layout loaded')
     return <PostsProvider initPosts={initPosts}>
-        
+
         {children}
     </PostsProvider>
 
